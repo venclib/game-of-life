@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 var bodyParser = require('body-parser');
+var path = require('path');
 
 app.use(bodyParser.json());
 
@@ -11,6 +12,18 @@ app.post('/calculate-next-generation', function (req, res) {
 app.listen(3000, function() {
     console.log('App listening on port 3000')
 })
+
+app.get('/', function (req, res) {
+    res.sendFile(path.join(__dirname, '../frontend/app/index.html'));
+});
+
+app.get('/*', function (req, res) {
+    if (req && req.url && req.url.indexOf('.') > -1) {
+        res.sendFile(path.join(__dirname, '../frontend/app' + req.url));
+    } else {
+        res.sendFile(path.join(__dirname, '../frontend/app/index.html'));
+    }
+});
 
 function getNextState(currentState) {
     var nextState = [];

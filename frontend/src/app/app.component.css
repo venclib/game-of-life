@@ -1,0 +1,18 @@
+mat-grid-tile {
+  background: lightblue;
+}
+
+.container{
+  position: absolute;
+  width: 48%;
+  left: 24%;
+  top: 5px;
+}
+
+.live {
+  background: red;
+}
+
+.row {
+  margin-bottom: 1px;
+}
