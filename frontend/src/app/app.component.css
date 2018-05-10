@@ -2,6 +2,10 @@ mat-grid-tile {
   background: lightblue;
 }
 
+mat-slider {
+  width: 20%;
+}
+
 .container{
   position: absolute;
   width: 48%;
@@ -15,4 +19,8 @@ mat-grid-tile {
 
 .row {
   margin-bottom: 1px;
+}
+
+.buttons {
+  margin-bottom: 5px;
 }

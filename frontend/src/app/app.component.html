@@ -3,9 +3,18 @@
   <mat-grid-tile *ngFor="let cell of row; let columnIndex = index" (click)="click(rowIndex,columnIndex)" [ngClass]="{'live': cell}"></mat-grid-tile>
 </mat-grid-list>
 </div>
+<div class="buttons">
+  <button mat-button *ngIf="!isRunning" (click)="autoPlay()">Play</button>
+  <button mat-button *ngIf="isRunning" (click)="stopPlay()">Stop</button>
+  <button mat-button (click)="getNextGeneration()">Next</button>
+  <span>Step count: {{stepCount}}</span>
+</div>
 <div>
-  <button *ngIf="!isRunning" (click)="autoPlay()">Play</button>
-  <button *ngIf="isRunning" (click)="stopPlay()">Stop</button>
-  <button (click)="getNextGeneration()">Next</button>
+  <mat-slider
+  thumbLabel
+  (input)="resizeBoard($event)"
+  tickInterval="1"
+  min="10"
+  max="100"></mat-slider>
 </div>
 
