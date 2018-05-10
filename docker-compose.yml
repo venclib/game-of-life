@@ -1,0 +1,16 @@
+version: '2'
+services:
+  app:
+    image: game-of-life:latest
+    container_name: app
+    expose:
+      - 3000
+    ports:
+      - 3000:3000
+    networks:
+      - gol
+    volumes:
+      - "./frontend/dist:/frontend/"
+networks:
+  gol:
+    driver: bridge
