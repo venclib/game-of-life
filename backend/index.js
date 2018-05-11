@@ -1,89 +1,28 @@
 const express = require('express')
 const app = express()
+
+const http = require('http');
+const router = express.Router();
+
+const api = require('./routes/api');
+
 var bodyParser = require('body-parser');
 var path = require('path');
 
-app.use(bodyParser.json());
+var nextState = require('./state-calculator/next-state.js')
+var lifParser = require('./lif-parser/lif-parser.js')
 
-app.post('/calculate-next-generation', function (req, res) {
-  res.send(getNextState(req.body))
-})
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, '../frontend/app')));
+app.use('/api', api);
 
 app.listen(3000, function() {
     console.log('App listening on port 3000')
 })
 
-app.get('/', function (req, res) {
+app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname, '../frontend/app/index.html'));
 });
 
-app.get('/*', function (req, res) {
-    if (req && req.url && req.url.indexOf('.') > -1) {
-        res.sendFile(path.join(__dirname, '../frontend/app' + req.url));
-    } else {
-        res.sendFile(path.join(__dirname, '../frontend/app/index.html'));
-    }
-});
 
-function getNextState(currentState) {
-    var nextState = [];
-    for (rowIndex in currentState) {
-        var newRow = [];
-        for (columnIndex in currentState[rowIndex]) {
-            var count = getAdjacentLiveCellsCount(+rowIndex, +columnIndex, currentState);
-
-            var currentCell = currentState[rowIndex][columnIndex];
-            newRow.push(getCurrentCellStatusFromLiveCount(count, currentCell));
-        }
-        nextState.push(newRow);
-    }
-    return nextState;
-}
-
-function getAdjacentLiveCellsCount(rowIndex, columnIndex, currentState) {
-    var adjacentCells = [];
-
-    var previousRowIndex = rowIndex - 1; 
-    var previousRow = currentState[previousRowIndex];
-
-    var currentRow = currentState[rowIndex];
-
-    var nextRowIndex = rowIndex + 1;
-    var nextRow = currentState[nextRowIndex];
-
-    adjacentCells.push(...getAdjacentLiveElements(columnIndex, previousRow));
-    adjacentCells.push(...getAdjacentLiveElements(columnIndex, nextRow));
-    adjacentCells.push(...getAdjacentLiveElements(columnIndex, currentRow, true));
-
-    return adjacentCells.length;
-}
-
-function getAdjacentLiveElements(columnIndex, row, isCurrentRow) {
-    var cellsState =[];
-   if (row) {
-        var previousColumn = row[columnIndex - 1]
-        previousColumn && cellsState.push(previousColumn);
-
-        var currentColumn = row[columnIndex];
-        !isCurrentRow && currentColumn && cellsState.push(currentColumn);
-
-        var nextColumn = row[columnIndex + 1]
-        nextColumn && cellsState.push(nextColumn);
-    }
-    return cellsState;
-}
-
-const ISOLATION_TRESHOLD = 2;
-const OVERPOPULATION_TRESHOLD = 3;
-const OPTIMAL_POPULATION_COUNT = 3;
-
-function getCurrentCellStatusFromLiveCount(liveCellCount, currentCellStatus) {
-    if (liveCellCount == OPTIMAL_POPULATION_COUNT && !currentCellStatus) {
-        return !currentCellStatus;
-    }
-    if ((liveCellCount < ISOLATION_TRESHOLD || liveCellCount > OVERPOPULATION_TRESHOLD) 
-            && currentCellStatus) {
-        return !currentCellStatus;
-    } 
-    return currentCellStatus;
-}
+const server = http.createServer(app);

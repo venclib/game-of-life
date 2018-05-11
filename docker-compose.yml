@@ -11,6 +11,7 @@ services:
       - gol
     volumes:
       - "./frontend/dist:/frontend/"
+      - "./resources:/resources/"
 networks:
   gol:
     driver: bridge
