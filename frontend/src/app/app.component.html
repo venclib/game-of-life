@@ -1,20 +1,28 @@
 <div class="container">
-<mat-grid-list *ngFor="let row of board; let rowIndex = index" cols="{{board.length}}" rowHeight="1:1" class="row">
-  <mat-grid-tile *ngFor="let cell of row; let columnIndex = index" (click)="click(rowIndex,columnIndex)" [ngClass]="{'live': cell}"></mat-grid-tile>
-</mat-grid-list>
-</div>
-<div class="buttons">
-  <button mat-button *ngIf="!isRunning" (click)="autoPlay()">Play</button>
-  <button mat-button *ngIf="isRunning" (click)="stopPlay()">Stop</button>
-  <button mat-button (click)="getNextGeneration()">Next</button>
-  <span>Step count: {{stepCount}}</span>
-</div>
-<div>
-  <mat-slider
-  thumbLabel
-  (input)="resizeBoard($event)"
-  tickInterval="1"
-  min="10"
-  max="100"></mat-slider>
-</div>
+  <div class="controll-panel">
+    <div class="controll-panel-row">
+      <button mat-button *ngIf="!isRunning" (click)="autoPlay()">Play</button>
+      <button mat-button *ngIf="isRunning" (click)="stopPlay()">Stop</button>
+      <button mat-button (click)="getNextGeneration()">Next</button>
+      <span>Step count: {{stepCount}}</span>
+    </div>
+    <div class="controll-panel-row">
+      <mat-form-field>
+        <input matInput type="number" min="10" max="100" required value="{{boardSize}}" (input)="resizeBoard($event.target.value)" placeholder="Type board size (10-100)">
+       </mat-form-field>
+       <mat-form-field> 
+        <mat-select [(value)]="selectedPattern" placeholder="choose pattern" (change)="selectPattern(value)">
+          <mat-option *ngFor="let pattern of patterns" value="{{pattern}}">{{pattern}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <div class="board">
+   <table>
+      <tr *ngFor="let row of board; let rowIndex = index">
+        <td *ngFor="let cell of row; let columnIndex = index" (click)="click(rowIndex,columnIndex)" [ngClass]="{'live': cell, 'dead': !cell}"></td>
+      </tr>
+   </table>
 
+  </div>
+</div>

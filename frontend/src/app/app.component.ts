@@ -1,41 +1,50 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ApiService } from './shared/services/api.service';
 import { Observable, Subscription } from 'rxjs/Rx';
+import { IPattern } from './shared/interfaces/IPattern';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+
+export class AppComponent implements OnInit, OnDestroy {
   public board: boolean[][] = [] ;
   public interval: Subscription;
   public isRunning: boolean = false;
   public stepCount: number = 0;
+  public boardSize: number = 80;
+  public patterns: string[];
+  public selectedPattern: string;
 
   constructor(private apiService: ApiService){
-    let initBoardSize = 10;
-    this.createBoard(initBoardSize);
+    
   }
 
-  private createBoard(boardSize: number) {
+  ngOnInit() {
+    this.createBoard();
+    this.getPatterns();
+  }
+
+  private createBoard() {
     this.board = [];
-    for (let i = 0; i < boardSize; i++){
+    for (let i = 0; i < this.boardSize; i++){
       var row = [];
-      for (let j = 0; j < boardSize; j++){
+      for (let j = 0; j < this.boardSize; j++){
         row.push(false);
       }
       this.board.push(row);
     }
   }
 
-  public resizeBoard(event: any) {
-    if (event && event.value) {
-      this.createBoard(event.value);
-    }
+  public resizeBoard(value: number) {
+    this.boardSize = value;
+    this.createBoard();
   }
 
   public click (rowIndex, columnIndex) {
+    this.stepCount = 0;
     this.board[rowIndex][columnIndex]= !this.board[rowIndex][columnIndex];
   }
 
@@ -51,9 +60,8 @@ export class AppComponent {
 
   public autoPlay() {
     this.isRunning = true;
-    this.getNextGeneration();
 
-    let oneSecondInMiliseconds = 1000;
+    let oneSecondInMiliseconds = 100;
     this.interval = Observable.interval(oneSecondInMiliseconds).subscribe(x => {
       this.getNextGeneration();
     });
@@ -64,6 +72,23 @@ export class AppComponent {
       this.isRunning = false;
       this.interval.unsubscribe();
     }
+  }
+
+  public getPatterns() {
+    this.apiService.getPatternNames().subscribe((resp: string[]) => { 
+          this.patterns = resp;
+        }
+      );
+  }
+
+  public selectPattern() {
+    this.apiService.getPatternByName(this.selectedPattern).subscribe((pattern: IPattern[]) => { 
+          this.boardSize = 80;
+          this.createBoard();
+          for (let state of pattern) {
+            this.board[state.column][state.row] = true;
+          }
+      });
   }
 
   ngOnDestroy() {
