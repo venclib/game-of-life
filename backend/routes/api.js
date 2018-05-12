@@ -8,8 +8,12 @@ router.post('/calculate-next-generation', function (req, res) {
   res.send(nextState.getNextState(req.body))
 })
 
-router.get('/get-patterns', function (req, res) {
-  res.send(lifParser.readFiles())
+router.get('/get-patterns-name', function (req, res) {
+  lifParser.readFileNames(res);
+})
+
+router.get('/get-pattern/name/:patternName', function (req, res) {
+  lifParser.getFile(res, req.params.patternName);
 })
 
 module.exports = router;

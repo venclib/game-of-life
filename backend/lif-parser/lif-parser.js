@@ -5,22 +5,24 @@ var data = {};
 var centerColumn = 40;
 var centerRow = 40;
 
-function readFiles() {
-  fs.readdir(resources, function(err, filenames) {
+function readFileNames(resp) {
+   fs.readdir(resources, function(err, filenames) {
     if (err) {
       console.log(err);
-      throw err;
+      resp.status(500).send('Internal server error');
     }
-    filenames.forEach(function(filename) {
-      fs.readFile(resources + filename, 'utf-8', function(err, content) {
-        if (err) {
-          throw err;
-        }
-        data[filename] = parseLifFile(content);
-      });
-    });
+    resp.send(filenames);
   });
-  return data;
+}
+
+function getFile(resp, filename) {
+    fs.readFile(resources + filename, 'utf-8', function(err, content) {
+      if (err) {
+        console.log('file not found with name: ' + filename);
+        resp.status(404).send('Not found');
+      }
+      resp.send(parseLifFile(content));
+    });
 }
 
 function parseLifFile(content) {
@@ -50,5 +52,6 @@ function parseLifFile(content) {
 }
 
 module.exports = {
-    readFiles
+    getFile,
+    readFileNames
 } 
