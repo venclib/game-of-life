@@ -9,8 +9,7 @@ const api = require('./routes/api');
 var bodyParser = require('body-parser');
 var path = require('path');
 
-var nextState = require('./state-calculator/next-state.js')
-var lifParser = require('./lif-parser/lif-parser.js')
+var mongoose = require('mongoose')
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../frontend/app')));
@@ -25,4 +24,7 @@ app.get('*', function (req, res) {
 });
 
 
-const server = http.createServer(app);
+
+mongoose.connect('mongodb://127.0.0.1:27017/gameoflife')
+.then(()=> { console.log(`Succesfully Connected to the Mongodb Database  at URL : mongodb://127.0.0.1:27017/gameoflife`)})
+.catch(()=> { console.log(`Error Connecting to the Mongodb Database at URL : mongodb://127.0.0.1:27017/gameoflife`)})
