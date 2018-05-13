@@ -1,7 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { ApiService } from './shared/services/api.service';
 import { Observable, Subscription } from 'rxjs/Rx';
-import { IPattern } from './shared/interfaces/IPattern';
+import { ISavedPatternResult, INewPattern, ISavedPatternList } from './shared/interfaces/IPattern';
+
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar} from '@angular/material';
 
 @Component({
   selector: 'app-root',
@@ -14,11 +16,12 @@ export class AppComponent implements OnInit, OnDestroy {
   public interval: Subscription;
   public isRunning: boolean = false;
   public stepCount: number = 0;
-  public boardSize: number = 80;
-  public patterns: string[];
-  public selectedPattern: string;
+  public boardSize: number = 30;
+  public patterns: ISavedPatternList[];
+  public selectedPattern: ISavedPatternList;
+  public savedPatternName: string;
 
-  constructor(private apiService: ApiService){
+  constructor(private apiService: ApiService, public dialog: MatDialog, public snackBar: MatSnackBar){
     
   }
 
@@ -27,7 +30,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.getPatterns();
   }
 
-  private createBoard() {
+  private createBoard(): void {
     this.board = [];
     for (let i = 0; i < this.boardSize; i++){
       var row = [];
@@ -38,17 +41,17 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  public resizeBoard(value: number) {
+  public resizeBoard(value: number): void {
     this.boardSize = value;
     this.createBoard();
   }
 
-  public click (rowIndex, columnIndex) {
+  public click (rowIndex: number, columnIndex: number): void {
     this.stepCount = 0;
     this.board[rowIndex][columnIndex]= !this.board[rowIndex][columnIndex];
   }
 
-  public getNextGeneration() {
+  public getNextGeneration(): void {
     this.apiService.getNextState(this.board)
       .subscribe((resp: boolean[][]) => 
           { 
@@ -58,7 +61,7 @@ export class AppComponent implements OnInit, OnDestroy {
       );
   }
 
-  public autoPlay() {
+  public autoPlay(): void {
     this.isRunning = true;
 
     let oneSecondInMiliseconds = 100;
@@ -67,31 +70,72 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
-  public stopPlay() {
+  public stopPlay(): void {
     if (this.interval) {
       this.isRunning = false;
       this.interval.unsubscribe();
     }
   }
 
-  public getPatterns() {
-    this.apiService.getPatternNames().subscribe((resp: string[]) => { 
+  public getPatterns(): void {
+    this.apiService.getPatternNames().subscribe((resp: ISavedPatternList[]) => { 
           this.patterns = resp;
         }
       );
   }
 
-  public selectPattern() {
-    this.apiService.getPatternByName(this.selectedPattern).subscribe((pattern: IPattern[]) => { 
-          this.boardSize = 80;
+  public selectPattern(): void  {
+    this.apiService.getPatternByName(this.selectedPattern.name, this.selectedPattern.id)
+      .subscribe((pattern: ISavedPatternResult) => { 
+          this.boardSize = pattern.boardSize;
           this.createBoard();
-          for (let state of pattern) {
+          for (let state of pattern.board) {
             this.board[state.column][state.row] = true;
           }
       });
   }
 
+  public savePatternDialog(): void {
+    let dialogRef = this.dialog.open(PatternSaveDialog, {
+      width: '250px',
+      data: { name: this.savedPatternName}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.apiService.savePattern({name: result, data: this.board}).subscribe((pattern: INewPattern) => {
+          this.openSnackBar('Pattern save succesfull', 'OK');
+          this.getPatterns();
+        }, err => {
+          this.openSnackBar('Pattern save failed', 'OK');
+        });
+      }
+    });
+  }
+
+  private openSnackBar(message: string, action: string): void {
+    this.snackBar.open(message, action, {
+      duration: 3000,
+    });
+  }
+
   ngOnDestroy() {
     this.stopPlay();
   }
+}
+
+@Component({
+  selector: 'pattern-save-dialog',
+  templateUrl: 'pattern-save-dialog.html',
+})
+export class PatternSaveDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<PatternSaveDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any) { }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
 }

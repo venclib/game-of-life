@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test-unit": "mocha ./services/*.spec.js"
   },
   "dependencies": {
     "body-parser": "^1.18.2",
@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/venclib/game-of-life/issues"
   },
-  "homepage": "https://github.com/venclib/game-of-life#readme"
+  "homepage": "https://github.com/venclib/game-of-life#readme",
+  "devDependencies": {
+    "chai": "^4.1.2"
+  }
 }

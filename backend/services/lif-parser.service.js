@@ -2,24 +2,16 @@ const resources = '../../resources/';
 const fs = require('fs');
 var data = {};
 
-var centerColumn = 40;
-var centerRow = 40;
-
-function readFileNames(resp) {
-   fs.readdir(resources, function(err, filenames) {
-    if (err) {
-      console.log(err);
-      resp.status(500).send('Internal server error');
-    }
-    resp.send(filenames);
-  });
-}
+var lifBoardSize = 80;
+var centerColumn = lifBoardSize / 2;
+var centerRow = lifBoardSize / 2;
 
 function getFile(resp, filename) {
     fs.readFile(resources + filename, 'utf-8', function(err, content) {
       if (err) {
         console.log('file not found with name: ' + filename);
         resp.status(404).send('Not found');
+        return;
       }
       resp.send(parseLifFile(content));
     });
@@ -48,10 +40,9 @@ function parseLifFile(content) {
       }
     }
   }
-  return liveCordinates;
+  return {boardSize: lifBoardSize, board: liveCordinates};
 }
 
 module.exports = {
-    getFile,
-    readFileNames
+    getFile
 } 

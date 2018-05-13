@@ -1,9 +1,9 @@
 <div class="container">
   <div class="controll-panel">
     <div class="controll-panel-row">
-      <button mat-button *ngIf="!isRunning" (click)="autoPlay()">Play</button>
-      <button mat-button *ngIf="isRunning" (click)="stopPlay()">Stop</button>
-      <button mat-button (click)="getNextGeneration()">Next</button>
+      <button mat-raised-button *ngIf="!isRunning" (click)="autoPlay()">Play</button>
+      <button mat-raised-button *ngIf="isRunning" (click)="stopPlay()">Stop</button>
+      <button mat-raised-button (click)="getNextGeneration()">Next</button>
       <span>Step count: {{stepCount}}</span>
     </div>
     <div class="controll-panel-row">
@@ -11,10 +11,13 @@
         <input matInput type="number" min="10" max="100" required value="{{boardSize}}" (input)="resizeBoard($event.target.value)" placeholder="Type board size (10-100)">
        </mat-form-field>
        <mat-form-field> 
-        <mat-select [(value)]="selectedPattern" placeholder="choose pattern" (change)="selectPattern(value)">
-          <mat-option *ngFor="let pattern of patterns" value="{{pattern}}">{{pattern}}</mat-option>
+        <mat-select [(ngModel)]="selectedPattern" placeholder="Choose pattern" (change)="selectPattern(value)">
+          <mat-option *ngFor="let pattern of patterns" [value]="pattern">{{pattern.name}}</mat-option>
         </mat-select>
       </mat-form-field>
+    </div>
+    <div class="controll-panel-row">
+      <button mat-raised-button (click)="savePatternDialog()">Save current state</button>
     </div>
   </div>
   <div class="board">
