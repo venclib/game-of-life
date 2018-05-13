@@ -13,6 +13,7 @@ var mongoose = require('mongoose')
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '../frontend/app')));
+
 app.use('/api', api);
 
 app.listen(3000, function() {
@@ -22,8 +23,6 @@ app.listen(3000, function() {
 app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname, '../frontend/app/index.html'));
 });
-
-
 
 mongoose.connect('mongodb://mongodb:27017/gameoflife')
 .then(()=> { console.log(`Succesfully Connected to the Mongodb Database  at URL : mongodb://mongodb:27017/gameoflife`)})

@@ -63,7 +63,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   public autoPlay(): void {
     this.isRunning = true;
-
     let oneSecondInMiliseconds = 500;
     this.interval = Observable.interval(oneSecondInMiliseconds).subscribe(x => {
       this.getNextGeneration();
@@ -108,7 +107,7 @@ export class AppComponent implements OnInit, OnDestroy {
           this.boardSize = pattern.boardSize;
           this.createBoard();
           for (let state of pattern.board) {
-            this.board[state.column][state.row] = true;
+            this.board[state.row][state.column] = true;
           }
       });
   }

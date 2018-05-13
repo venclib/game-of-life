@@ -7,7 +7,7 @@ import { ISavedPatternResult, INewPattern, ISavedPatternList } from '../interfac
 @Injectable()
 export class ApiService {
 
-  BACKEND_URL = window.location + 'api/';
+   private BACKEND_URL = window.location + 'api/';
 
   constructor(private http: HttpClient) { }
 
@@ -21,7 +21,6 @@ export class ApiService {
   }
 
   public getPatternByName(patternName?: string, id?: string): Observable<ISavedPatternResult> {
-    console.log(id);
     let params = new HttpParams();
     !id && patternName && (params = params.append('patternName', patternName));
     id && (params = params.append('id', id));

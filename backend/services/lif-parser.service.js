@@ -9,8 +9,8 @@ var centerRow = lifBoardSize / 2;
 function getFile(resp, filename) {
     fs.readFile(resources + filename, 'utf-8', function(err, content) {
       if (err) {
-        console.log('file not found with name: ' + filename);
-        resp.status(404).send('Not found');
+        console.log(err);
+        resp.status(500).send('Internal server error');
         return;
       }
       resp.send(parseLifFile(content));

@@ -20,7 +20,6 @@ router.get('/get-pattern', function (req, res) {
     } else {
         lifParser.getFile(res, patternName);
     }
-  
 })
 
 router.post('/save-pattern', function (req, res) {

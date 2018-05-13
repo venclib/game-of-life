@@ -9,7 +9,7 @@
 - Docker-compose: 1.18.0
 
 # Build
-A projekt gyökér mappájában lévő `./build.sh` script futtatásával lehet buildelni a projectet. A script telepíti a backend illetve a frontend függőségeket, majd buildeli a frontend kódot, végül pedig készít egy docker image-t a következő néven: `game-of-life:latest`
+A projekt gyökér mappájában lévő `./build.sh` script futtatásával lehet buildelni a projectet. A script telepíti a backend, illetve a frontend függőségeket, majd buildeli a frontend kódot, végül pedig készít egy docker image-t a következő néven: `game-of-life:latest`
 
 # Alkalmazás futtatása
 A sikeres build után a `docker-compose up -d` paranccsal lehet indítani az alkalmazást, amely elindít egy mongo adatbázist az alkalmazás számára, majd elindítja a Build szekcióban készített containert is.
@@ -28,6 +28,6 @@ A következő lehetőségek elérhetőek:
 > - Minták betöltése: Lehetőség van korábban elmentett vagy a `resources` mappában lévő file-ok betöltésére a `Choose pattern`  feliratú dropdown-al
 > - Ha futás időben került új minta a resources mappába, akkor a `Refresh patterns` gombbal lehet újratölteni a mintákat
 > - Minta mentése: bármilyen állapotú board mentésére van lehetőség a `Save current state` gombbal. Ezt követően tetszőleges név adható, majd a `Save` gombbal menthető
-> - Lehetőség van automatikus lejátszásra (`Play` feliratú gomb)
+> - Lehetőség van automatikus lejátszásra (`Play` feliratú gomb). Ekkor 500 millisecundumonként lép az alkalmazás a következő generációra
 > - Lehetőség van lépésenként lejátszani a generációkat (`Next` feliratú gomb)
 > (A fenti két gomb mellett szerepel a generációk száma, ami addig számlálja a lépéseket, míg nem változik meg egy cella állapota a felhasználó által `Step count`)

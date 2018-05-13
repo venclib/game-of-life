@@ -40,9 +40,9 @@ function findPatternById(resp, id) {
 function createPattern(savedState, resp){
     var data = savedState.data;
     var liveCells = [];
-    for (columnIndex in data) {
-        for (rowIndex in data[columnIndex]) {
-            if (data[columnIndex][rowIndex]) {
+    for (rowIndex in data) {
+        for (columnIndex in data[rowIndex]) {
+            if (data[rowIndex][columnIndex]) {
                 liveCells.push({column: columnIndex, row: rowIndex})
             }
         }
@@ -62,7 +62,7 @@ function createPattern(savedState, resp){
         });
         
     }catch(e) {    
-        throw Error("Error while Creating pattern")
+        resp.status(500).send(e);
     }
 }
 
