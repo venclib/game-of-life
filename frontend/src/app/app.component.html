@@ -10,11 +10,16 @@
       <mat-form-field>
         <input matInput type="number" min="10" max="100" required value="{{boardSize}}" (input)="resizeBoard($event.target.value)" placeholder="Type board size (10-100)">
        </mat-form-field>
+     </div>
+    <div class="controll-panel-row">
        <mat-form-field> 
         <mat-select [(ngModel)]="selectedPattern" placeholder="Choose pattern" (change)="selectPattern(value)">
-          <mat-option *ngFor="let pattern of patterns" [value]="pattern">{{pattern.name}}</mat-option>
+          <mat-optgroup *ngFor="let group of patterns" [label]="group.groupName">
+            <mat-option *ngFor="let pattern of group.patterns" [value]="pattern">{{pattern.name}}</mat-option>
+          </mat-optgroup>
         </mat-select>
       </mat-form-field>
+      <button mat-raised-button (click)="getPatterns()">Refresh patterns</button>
     </div>
     <div class="controll-panel-row">
       <button mat-raised-button (click)="savePatternDialog()">Save current state</button>

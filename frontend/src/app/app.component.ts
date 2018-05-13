@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { ApiService } from './shared/services/api.service';
 import { Observable, Subscription } from 'rxjs/Rx';
-import { ISavedPatternResult, INewPattern, ISavedPatternList } from './shared/interfaces/IPattern';
+import { ISavedPatternResult, INewPattern, ISavedPatternList, IGroupedPattern } from './shared/interfaces/IPattern';
 
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar} from '@angular/material';
 
@@ -17,7 +17,7 @@ export class AppComponent implements OnInit, OnDestroy {
   public isRunning: boolean = false;
   public stepCount: number = 0;
   public boardSize: number = 30;
-  public patterns: ISavedPatternList[];
+  public patterns: IGroupedPattern[];
   public selectedPattern: ISavedPatternList;
   public savedPatternName: string;
 
@@ -64,7 +64,7 @@ export class AppComponent implements OnInit, OnDestroy {
   public autoPlay(): void {
     this.isRunning = true;
 
-    let oneSecondInMiliseconds = 100;
+    let oneSecondInMiliseconds = 500;
     this.interval = Observable.interval(oneSecondInMiliseconds).subscribe(x => {
       this.getNextGeneration();
     });
@@ -79,7 +79,25 @@ export class AppComponent implements OnInit, OnDestroy {
 
   public getPatterns(): void {
     this.apiService.getPatternNames().subscribe((resp: ISavedPatternList[]) => { 
-          this.patterns = resp;
+          var fromFile = {
+            groupName: 'From file',
+            patterns: []
+          };
+          var fromDB = {
+            groupName: 'From database',
+            patterns: []
+          }
+          resp.forEach((item) => {
+            if (item.id) {
+              fromDB.patterns.push(item);
+            } else {
+              fromFile.patterns.push(item);
+            }
+          })
+          this.patterns = [
+            fromFile, fromDB
+          ];
+
         }
       );
   }

@@ -3,6 +3,11 @@ export interface ISavedPatternResult {
   board: ILiveCellCoordinates[]
 }
 
+export interface IGroupedPattern {
+  groupName: string,
+  patterns: ISavedPatternList[]
+}
+
 export interface ILiveCellCoordinates {
   column: number,
   row: number
