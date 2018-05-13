@@ -13,7 +13,7 @@
      </div>
     <div class="controll-panel-row">
        <mat-form-field> 
-        <mat-select [(ngModel)]="selectedPattern" placeholder="Choose pattern" (change)="selectPattern(value)">
+        <mat-select [(ngModel)]="selectedPattern" placeholder="Choose pattern" (change)="selectPattern()">
           <mat-optgroup *ngFor="let group of patterns" [label]="group.groupName">
             <mat-option *ngFor="let pattern of group.patterns" [value]="pattern">{{pattern.name}}</mat-option>
           </mat-optgroup>

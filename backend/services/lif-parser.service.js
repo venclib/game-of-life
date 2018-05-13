@@ -33,7 +33,7 @@ function parseLifFile(content) {
         if (line) {
           for (var k = 0; k < line.length; k++) {
             if (line.substring(k, k+1) == '*') {
-              liveCordinates.push({column: initColumn + j - 1, row: initRow + k});
+              liveCordinates.push({column: initColumn + k, row: initRow + j - 1});
             }
           }
         }
@@ -44,5 +44,6 @@ function parseLifFile(content) {
 }
 
 module.exports = {
-    getFile
+    getFile,
+    parseLifFile
 } 
