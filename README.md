@@ -18,7 +18,7 @@ A sikeres build után a `docker-compose up -d` paranccsal lehet indítani az alk
 Ezután a `http://localhots:3000` címen érhető el az alkalmazás
 
 #  .lif file parser
-A backend alkalmazáshoz volume-ként csatolva van a projekt gyökerében lévő `resources` mappa. Ebbe a mappába bemásolhatóak, illetve eltávolíthatóak a .lif file-ok. A file-okat futtás időben is lehet változtatni.
+A backend alkalmazáshoz volume-ként csatolva van a projekt gyökerében lévő `resources` mappa. Ebbe a mappába bemásolhatóak, illetve eltávolíthatóak a .lif file-ok. A file-okat futás időben is lehet változtatni.
 
 # Adatbázis fileok
 Az adatbázishoz szükséges file-ok a projekt gyökerében lévő `data` könyvtár tárolja, így a container újraindítását követően is elérhetőek maradnak a mentett minták.
