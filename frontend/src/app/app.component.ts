@@ -30,7 +30,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.getPatterns();
   }
 
-  private createBoard(): void {
+  public createBoard(): void {
     this.board = [];
     for (let i = 0; i < this.boardSize; i++){
       var row = [];
@@ -47,7 +47,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   public click (rowIndex: number, columnIndex: number): void {
-    this.stepCount = 0;
+    this.resetCounter();
     this.board[rowIndex][columnIndex]= !this.board[rowIndex][columnIndex];
   }
 
@@ -104,6 +104,7 @@ export class AppComponent implements OnInit, OnDestroy {
   public selectPattern(): void  {
     this.apiService.getPatternByName(this.selectedPattern.name, this.selectedPattern.id)
       .subscribe((pattern: ISavedPatternResult) => { 
+          this.resetCounter();
           this.boardSize = pattern.boardSize;
           this.createBoard();
           for (let state of pattern.board) {
@@ -134,6 +135,10 @@ export class AppComponent implements OnInit, OnDestroy {
     this.snackBar.open(message, action, {
       duration: 3000,
     });
+  }
+
+  private resetCounter() {
+    this.stepCount = 0;
   }
 
   ngOnDestroy() {
